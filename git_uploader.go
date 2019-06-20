@@ -39,8 +39,6 @@ func GetUploader() {
 	if err != nil {
 		//Uploader call still on the same gorutine.
 		log.Print(err)
-		log.Print("dance dance dance")
-
 	}
 	log.Print("Successfully downloaded the uploader." + string(out))
 	log.Print("Setting uploader executable permissions.")

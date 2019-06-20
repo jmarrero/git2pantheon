@@ -47,6 +47,12 @@ go build
 go test
 ```
 
+7. To build the Container using buildah
+
+```
+buildah bud .
+```
+
 **Submitting a request**
 
 The service expects only POST REST calls.
