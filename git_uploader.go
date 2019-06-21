@@ -46,13 +46,19 @@ func GetUploader() {
 }
 
 func push2pantheon(directory string) {
-	//Now call python
-	args := []string{"pantheon.py", "push", "--directory", directory}
-	cmd := exec.Command("python3", args...) //TODO
-	out, err := cmd.Output()
 
-	log.Print(err)
-	log.Print(string(out))
+	if _, err := os.Stat(directory + "/pantheon2.yml"); os.IsNotExist(err) {
+		log.Print("pantheon2.yml was not found in the root of the repo, skipping upload.")
+	} else {
+		//Now call python
+		log.Print("Found pantheon2.yml in the root of the repo, uploading.")
+		args := []string{"pantheon.py", "push", "--directory", directory}
+		cmd := exec.Command("python3", args...) //TODO
+		out, err := cmd.Output()
+
+		log.Print(err)
+		log.Print(string(out))
+	}
 
 	// Cleanup also happens in the same thread.
 	cleanup(directory)
