@@ -50,7 +50,24 @@ go test
 7. To build the Container using buildah
 
 ```
-buildah bud .
+buildah -t YOURTAG bud .
+```
+
+8. To run the container using podman
+
+```
+podman run --rm -p 9666:9666 YOURTAG
+```
+
+9. To get inside the container and debug
+
+get the container process
+```
+podman ps
+```
+
+```
+podman exec -it PROCESS bash
 ```
 
 **Submitting a request**

@@ -47,8 +47,8 @@ func GetUploader() {
 
 func push2pantheon(directory string) {
 	//Now call python
-	args := []string{"push", "--directory", directory}
-	cmd := exec.Command("./pantheon.py", args...) //TODO
+	args := []string{"pantheon.py", "push", "--directory", directory}
+	cmd := exec.Command("python3", args...) //TODO
 	out, err := cmd.Output()
 
 	log.Print(err)
