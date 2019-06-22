@@ -47,19 +47,20 @@ go build
 go test
 ```
 
-7. To build the Container using buildah
+**To build and use the application on a container using buildah and podman**
+1. Build the container
 
 ```
 buildah -t YOURTAG bud .
 ```
 
-8. To run the container using podman
+2. To run the container using podman
 
 ```
 podman run --rm -p 9666:9666 YOURTAG
 ```
 
-9. To get inside the container and debug
+3. To get inside the container and debug
 
 get the container process
 ```
@@ -72,12 +73,11 @@ podman exec -it PROCESS bash
 
 **Submitting a request**
 
-The service expects only POST REST calls.
+The service expects only POST REST calls to http://<YOURHOST>:9666/clone
 
 The payload must include a repo and branch to be cloned.
-The repository is expected to have a pantheon2.yml file defining the pantheon enpoint and general configuration on how to handle the documentation in the repository. 
 
-Without it no upload will happen.
+The repository is expected to have a pantheon2.yml file defining the pantheon enpoint and general configuration on how to handle the documentation in the repository. Without it no upload will happen.
 
 An example of the payload is:
 
@@ -85,5 +85,4 @@ An example of the payload is:
 curl -d '{"repo":"https://github.com/jmarrero/test-adocs.git", "branch":"master"}' -H "Content-Type: application/json" -X POST http://localhost:9666/clone
 ```
 
-For information about pantheon see: 
-https://github.com/redhataccess/pantheon
+For information about pantheon see: https://github.com/redhataccess/pantheon
