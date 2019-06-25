@@ -56,8 +56,9 @@ buildah -t YOURTAG bud .
 8. To run the container using podman
 
 ```
-podman run --rm -p 9666:9666 YOURTAG
+podman run --network=host --rm -p 9666:9666 YOURTAG
 ```
+**Notice the --network flag** this is only needed if you are running pantheon on the same localbox, that way this service can upload files to "localhost".
 
 9. To get inside the container and debug
 

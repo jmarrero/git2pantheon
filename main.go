@@ -19,7 +19,6 @@ type repository_and_branch struct {
 	Branch string `json:"branch"`
 }
 
-// curl -d '{"repo":"https://github.com/jmarrero/test-adocs.git", "branch":"master"}' -H "Content-Type: application/json" -X POST http://localhost:9666/clone
 func cloneBranch(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
@@ -35,7 +34,13 @@ func cloneBranch(w http.ResponseWriter, r *http.Request) {
 		log.Println(repo.Branch)
 
 		repository := repo.Repo
+		if repository == "" {
+			http.Error(w, "Error reading repository url", http.StatusInternalServerError)
+		}
 		branch := repo.Branch
+		if branch == "" {
+			branch = "master"
+		}
 		directory := "./" + randomAlphaNumericString()
 
 		//start a new goroutine (lightweight thread) to handle clone/push/cleanup
