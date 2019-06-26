@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 var (
@@ -22,6 +23,7 @@ type repository_and_branch struct {
 func cloneBranch(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		if err != nil {
 			http.Error(w, "Error reading request body",
 				http.StatusInternalServerError)
@@ -34,9 +36,19 @@ func cloneBranch(w http.ResponseWriter, r *http.Request) {
 		log.Println(repo.Branch)
 
 		repository := repo.Repo
+		error_status := false
 		if repository == "" {
 			http.Error(w, "Error reading repository url", http.StatusInternalServerError)
+			error_status = true
 		}
+		if !strings.Contains(strings.ToUpper(repository), "GIT") {
+			http.Error(w, "The repository entered does not look like a git repo.", http.StatusInternalServerError)
+			error_status = true
+		}
+		if error_status {
+			return
+		}
+
 		branch := repo.Branch
 		if branch == "" {
 			branch = "master"
