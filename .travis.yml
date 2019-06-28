@@ -1,0 +1,12 @@
+language: go
+sudo: false
+before_script:
+ - cd tools/git2pantheon
+before_install:
+ - go get gopkg.in/src-d/go-git.v4
+script:
+ - go build
+ - go test
+after_success:
+# Move the code coverage results to codecov
+- bash <(curl -s https://codecov.io/bash)
