@@ -24,14 +24,14 @@ func gitClone(repository string, branch string, directory string) {
 
 	if err == nil {
 		//Uploader call still on the same gorutine.
-		push2pantheon(directory)
+		push2Pantheon(directory)
 	} else {
 		log.Print(err)
 	}
 
 }
 
-func GetUploader() {
+func getUploader() {
 	const uploader_url = "https://raw.githubusercontent.com/redhataccess/pantheon/master/uploader/pantheon.py"
 	args := []string{"-o", "./pantheon.py", uploader_url}
 	cmd := exec.Command("curl", args...)
@@ -45,7 +45,7 @@ func GetUploader() {
 	err = os.Chmod("./pantheon.py", 0755)
 }
 
-func push2pantheon(directory string) {
+func push2Pantheon(directory string) {
 
 	if _, err := os.Stat(directory + "/pantheon2.yml"); os.IsNotExist(err) {
 		log.Print("pantheon2.yml was not found in the root of the repo, skipping upload.")

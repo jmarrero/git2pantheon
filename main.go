@@ -73,7 +73,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/clone", cloneBranch)
 
-	GetUploader()
+	getUploader()
 
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
