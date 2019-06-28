@@ -64,7 +64,6 @@ func TestGitClone(t *testing.T) {
 	if !strings.Contains(output, "repository not found") {
 		t.Errorf("No repo should be downloaded for this test")
 	}
-
 }
 
 func captureOutput(f func()) string {
