@@ -1,3 +1,6 @@
+Initial work for the Pantheon git integration microservice. This repo is now archived as the code now lives in: https://github.com/redhataccess/pantheon/tree/master/tools/git2pantheon
+
+
 **Setting up your development environment**
 
 1. Install golang
