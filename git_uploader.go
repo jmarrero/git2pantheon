@@ -32,17 +32,19 @@ func gitClone(repository string, branch string, directory string) {
 }
 
 func getUploader() {
-	const uploader_url = "https://raw.githubusercontent.com/redhataccess/pantheon/master/uploader/pantheon.py"
-	args := []string{"-o", "./pantheon.py", uploader_url}
-	cmd := exec.Command("curl", args...)
-	out, err := cmd.Output()
-	if err != nil {
-		//Uploader call still on the same gorutine.
-		log.Print(err)
+	if _, err := os.Stat("./pantheon.py"); os.IsNotExist(err) {
+		const uploader_url = "https://raw.githubusercontent.com/redhataccess/pantheon/master/uploader/pantheon.py"
+		args := []string{"-o", "./pantheon.py", uploader_url}
+		cmd := exec.Command("curl", args...)
+		out, err := cmd.Output()
+		if err != nil {
+			//Uploader call still on the same gorutine.
+			log.Print(err)
+		}
+		log.Print("Successfully downloaded the uploader." + string(out))
 	}
-	log.Print("Successfully downloaded the uploader." + string(out))
 	log.Print("Setting uploader executable permissions.")
-	err = os.Chmod("./pantheon.py", 0755)
+	os.Chmod("./pantheon.py", 0755)
 }
 
 func push2Pantheon(directory string) {
@@ -50,10 +52,17 @@ func push2Pantheon(directory string) {
 	if _, err := os.Stat(directory + "/pantheon2.yml"); os.IsNotExist(err) {
 		log.Print("pantheon2.yml was not found in the root of the repo, skipping upload.")
 	} else {
-		//Now call python
 		log.Print("Found pantheon2.yml in the root of the repo, uploading.")
-		args := []string{"pantheon.py", "push", "--directory", directory}
-		cmd := exec.Command("python3", args...) //TODO
+		var user = os.Getenv("UPLOADER_USER")
+		var password = os.Getenv("UPLOADER_PASSWORD")
+		var server = os.Getenv("PANTHEON_SERVER")
+		args := []string{"pantheon.py", "push", "--user", user, "--password", password, "--directory", directory, "--server", server}
+		if user == "" || password == "" || server == "" {
+			log.Print("Environment variables not found, using uploader and pantheon.yml settings.")
+			args = []string{"pantheon.py", "push", "--directory", directory}
+		}
+		//Now call python
+		cmd := exec.Command("python3", args...)
 		out, err := cmd.Output()
 
 		log.Print(err)

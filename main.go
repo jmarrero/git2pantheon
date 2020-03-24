@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -53,7 +54,7 @@ func cloneBranch(w http.ResponseWriter, r *http.Request) {
 		if branch == "" {
 			branch = "master"
 		}
-		directory := "./" + randomAlphaNumericString()
+		directory := randomAlphaNumericString()
 
 		//start a new goroutine (lightweight thread) to handle clone/push/cleanup
 		go gitClone(repository, branch, directory)
@@ -64,14 +65,29 @@ func cloneBranch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func getInfo(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		var response = os.Getenv("COMMIT_HASH")
+		if response == "" {
+			response = "not set"
+		}
+		fmt.Fprint(w, "COMMIT_HASH is : "+response)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
+}
+
 func init() {
 	log.SetFlags(log.Lmicroseconds | log.Lshortfile)
-	flag.Parse()
 }
 
 func main() {
+	flag.Parse()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/clone", cloneBranch)
+	mux.HandleFunc("/info", getInfo)
 
 	getUploader()
 
